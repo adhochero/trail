@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-import {getDatabase, set, get, update, remove, ref, child} 
+import { getDatabase, set, get, update, remove, ref, child } 
     from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
 // Your web app's Firebase configuration
@@ -20,7 +20,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 
-function insertData(id, x, y){
+function insertEntityData(id, x, y){
     set(ref(db, "entities/" + id), {
         X: x,
         Y: y
@@ -33,7 +33,7 @@ function insertData(id, x, y){
     });
 }
 
-function updateData(id, x, y){
+function updateEntityData(id, x, y){
     update(ref(db, "entities/" + id), {
         X: x,
         Y: y
@@ -46,7 +46,7 @@ function updateData(id, x, y){
     });
 }
 
-function removeData(id){
+function removeEntity(id){
     remove(ref(db, "entities/" + id))
     .then(() => {
         console.log("data removed successfully!!");
@@ -56,7 +56,7 @@ function removeData(id){
     });
 }
 
-function findData(id){
+function findEntity(id){
     const dbref = ref(db);
 
     get(child(dbref, "entities/" + id))
@@ -88,4 +88,4 @@ async function findAllEntities(){
     }
 }
 
-export { insertData, updateData, removeData, findData, findAllEntities }
+export { insertEntityData, updateEntityData, removeEntity, findEntity, findAllEntities }
