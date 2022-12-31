@@ -22,8 +22,8 @@ const db = getDatabase();
 
 function insertEntityData(id, x, y){
     set(ref(db, "entities/" + id), {
-        X: x,
-        Y: y
+        x: x,
+        y: y
     })
     .then(() => {
         console.log('Data added successfully!!');
@@ -35,8 +35,8 @@ function insertEntityData(id, x, y){
 
 function updateEntityData(id, x, y){
     update(ref(db, "entities/" + id), {
-        X: x,
-        Y: y
+        x: x,
+        y: y
     })
     .then(() => {
         console.log("Data updated successfully!!");
