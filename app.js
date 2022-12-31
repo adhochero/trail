@@ -15,7 +15,7 @@ let entities = [];
 window.onload = init;
 
 //remove me from database
-window.addEventListener('beforeunload',function(){
+window.addEventListener('unload',function(){
     removeEntity(myName);
 });
 
