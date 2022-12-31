@@ -20,10 +20,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 
-function insertEntityData(id, x, y){
+function insertEntityData(id, x, y, md){
     set(ref(db, "entities/" + id), {
         x: x,
-        y: y
+        y: y,
+        mdx: md.x,
+        mdy: md.y
     })
     .then(() => {
         console.log('Data added successfully!!');
@@ -33,10 +35,12 @@ function insertEntityData(id, x, y){
     });
 }
 
-function updateEntityData(id, x, y){
+function updateEntityData(id, x, y, md){
     update(ref(db, "entities/" + id), {
         x: x,
-        y: y
+        y: y,
+        mdx: md.x,
+        mdy: md.y
     })
     .then(() => {
         console.log("Data updated successfully!!");

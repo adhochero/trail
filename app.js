@@ -33,9 +33,7 @@ function init(){
     input = new GetInput(keys);
     
     //add me to database
-    insertEntityData(myName, 333, 250);
-
-    // findData(entities[0].id);
+    insertEntityData(myName, 333, 250, {x: 0, y:0});
 
     // Start the first frame request
     window.requestAnimationFrame(gameLoop);
@@ -99,8 +97,12 @@ async function updateEntities(){
         //for existing entities update position with data from database
         else{
             const index = entities.findIndex((entity) => entity.id === dbEntitiesKeys[i]);
-            if(entities[index].id !== myName)
-                entities[index].position = dbEntitiesValues[i];
+            if(entities[index].id !== myName){
+                entities[index].position.x = dbEntitiesValues[i].x;
+                entities[index].position.y = dbEntitiesValues[i].y;
+                entities[index].moveDirection.x = dbEntitiesValues[i].mdx;
+                entities[index].moveDirection.y = dbEntitiesValues[i].mdy; 
+            }
         }
     }
 
@@ -113,5 +115,5 @@ async function updateEntities(){
 
     //find index of my entity and update data
     const index = entities.findIndex((entity) => entity.id === myName);
-    updateEntityData(myName, entities[index].position.x, entities[index].position.y);
+    updateEntityData(myName, entities[index].position.x, entities[index].position.y, entities[index].moveDirection);
 }

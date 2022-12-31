@@ -48,20 +48,19 @@ export class Entity{
             //smooth input movement using lerp
             this.inputSmoothing.x = this.lerp(this.inputSmoothing.x, this.inputDirection.x, this.inputResponsiveness * secondsPassed);
             this.inputSmoothing.y = this.lerp(this.inputSmoothing.y, this.inputDirection.y, this.inputResponsiveness * secondsPassed);
+            
+            //lerp velocity to zero
+            this.velocity.x = this.lerp(this.velocity.x, 0, this.inputResponsiveness * secondsPassed);
+            this.velocity.y = this.lerp(this.velocity.y, 0, this.inputResponsiveness * secondsPassed);
+            
+            //combine velocity and input movement
+            this.moveDirection.x = this.velocity.x + (this.inputSmoothing.x * this.moveSpeed);
+            this.moveDirection.y = this.velocity.y + (this.inputSmoothing.y * this.moveSpeed);
+            
+            //move
+            this.position.x += this.moveDirection.x * secondsPassed;
+            this.position.y += this.moveDirection.y * secondsPassed;
         }
-
-        //lerp velocity to zero
-        this.velocity.x = this.lerp(this.velocity.x, 0, this.inputResponsiveness * secondsPassed);
-        this.velocity.y = this.lerp(this.velocity.y, 0, this.inputResponsiveness * secondsPassed);
-
-        //combine velocity and input movement
-        this.moveDirection.x = this.velocity.x + (this.inputSmoothing.x * this.moveSpeed);
-        this.moveDirection.y = this.velocity.y + (this.inputSmoothing.y * this.moveSpeed);
-
-        //move
-        this.position.x += this.moveDirection.x * secondsPassed;
-        this.position.y += this.moveDirection.y * secondsPassed;
-
 
         //update sprite
         this.sprite.updateSprite(secondsPassed);
