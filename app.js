@@ -18,11 +18,6 @@ window.onload = init;
 window.addEventListener('beforeunload',function(){
     removeEntity(myName);
 });
-document.addEventListener("visibilitychange", function(event) {
-    if (document.hidden) {
-      removeEntity(myName);
-    }
-});
 
 function init(){
     // Get a reference to the canvas
