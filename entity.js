@@ -4,6 +4,7 @@ export class Entity{
     constructor(keys){
         this.keys = keys;
         this.isMine = false;
+        this.id = 'default';
 
         this.inputDirection = {x: 0, y: 0};
         this.inputSmoothing = {x: 0, y: 0};
@@ -89,6 +90,12 @@ export class Entity{
         context.scale(this.moveDirection.x < 0 ? -1 : 1, 1);  //This does your mirroring/flipping
         this.sprite.drawSprite(context); //draw x/y is 0, position set on translate
         context.restore();
+
+        //draw name
+        context.fillStyle = "#fff";
+        context.font = "20px Special Elite";
+        context.textAlign = "center";
+        context.fillText(this.id, this.position.x, this.position.y - 32);
     }
 
     lerp(start, end, t){
