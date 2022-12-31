@@ -18,6 +18,9 @@ window.onload = init;
 window.addEventListener('beforeunload',function(){
     removeEntity(myName);
 });
+window.addEventListener("pagehide", function(event) {
+    removeEntity(myName);
+  });
 
 function init(){
     // Get a reference to the canvas
