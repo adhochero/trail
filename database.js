@@ -62,7 +62,7 @@ function findEntity(id){
     get(child(dbref, "entities/" + id))
     .then((snapshot) => {
         if(snapshot.exists()){
-            console.log(snapshot.val().X, snapshot.val().Y);
+            console.log(snapshot.val().x, snapshot.val().y);
         }
         else{
             console.log('no data found')
