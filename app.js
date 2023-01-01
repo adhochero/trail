@@ -27,7 +27,8 @@ function init(){
     canvas.height = 500;
 
     //prompt for name
-    myName = prompt('enter name')
+    myName = prompt('enter name');
+    if(myName === null) myName = 'default';
 
     //create new GetInput class
     input = new GetInput(keys);
