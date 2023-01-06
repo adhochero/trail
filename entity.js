@@ -11,7 +11,7 @@ export class Entity{
         this.velocity = {x: 0, y: 0};
         this.moveDirection = {x: 0, y: 0};
         this.position = {x: 333, y: 250};
-        this.inputResponsiveness = 6;
+        this.inputResponsiveness = 8;
         this.moveSpeed = 200;
 
         this.sprite = new AnimatedSprite(

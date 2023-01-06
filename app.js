@@ -6,11 +6,17 @@ let canvas;
 let context;
 let secondsPassed = 0;
 let oldTimeStamp = 0;
+let fps = 0;
 
 let myName = 'default';
 let input;
 let keys = [];
 let entities = [];
+let myIndex = -1;
+
+let mouse = {x: 0, y: 0};
+let follow = {x: 0, y: 0};
+let followSpeed = 0.05;
 
 window.onload = init;
 
@@ -26,8 +32,16 @@ function init(){
     canvas.width = 666;
     canvas.height = 500;
 
+    canvas.addEventListener('mousemove', (e) => {
+        // Get the bounding rect of the canvas element
+        const rect = canvas.getBoundingClientRect();
+
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+    })
+
     //prompt for name
-    myName = prompt('enter name');
+    // myName = prompt('enter name');
     if(myName === null) myName = 'default';
 
     //create new GetInput class
@@ -47,6 +61,9 @@ function gameLoop(timeStamp) {
     // Move forward in time with a maximum amount
     secondsPassed = Math.min(secondsPassed, 0.1);
 
+    // Calculate fps
+    fps = Math.round(1 / secondsPassed);
+
     //functions to run each frame
     update();
     draw();
@@ -61,6 +78,8 @@ function update() {
 
     //sort entities for proper z order
     entities.sort((a, b) => a.position.y - b.position.y);
+    //find my index
+    myIndex = entities.findIndex((entity) => entity.id === myName);
 
     entities.forEach(entity => {
         entity.update(secondsPassed);
@@ -71,14 +90,46 @@ function draw(){
     // Clear the entire canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
     
-    //draw below
+    //draw background
     context.rect(0, 0, canvas.width, canvas.height);
     context.fillStyle = "#a5cbb3";
     context.fill();
 
+    if(entities.length <= 0) return
+
+    //calculate center of my entity and mouse and use for "cameras" follow value
+    const relativeMouse = {
+        x: mouse.x - entities[myIndex].position.x,
+        y: mouse.y - entities[myIndex].position.y 
+    }
+
+    const playerCenter = {
+        x: -entities[myIndex].position.x + canvas.width / 2,
+        y: -entities[myIndex].position.y + canvas.height / 2
+    }
+
+    const betweenPlayerAndMouse = {
+        x: playerCenter.x * 2 - relativeMouse.x,
+        y: playerCenter.y * 2 - relativeMouse.y
+    }
+
+    follow.x = lerp(follow.x, betweenPlayerAndMouse.x, followSpeed);
+    follow.y = lerp(follow.y, betweenPlayerAndMouse.y, followSpeed);
+
+    context.save();
+
+    context.translate(follow.x, follow.y);
+
     entities.forEach(entity => {
         entity.draw(context);
     });
+
+    context.restore();
+
+    context.fillStyle = "#fff";
+    context.font = "14px Special Elite";
+    context.textAlign = "center";
+    context.fillText("FPS: "+ fps, 40, 20);
 }
 
 //update local entities to match ones in database
@@ -114,7 +165,12 @@ async function updateEntities(){
         }
     }
 
-    //find index of my entity and update data
+    //find my index
     const index = entities.findIndex((entity) => entity.id === myName);
+    //update my entity data
     updateEntityData(myName, entities[index].position.x, entities[index].position.y, entities[index].moveDirection);
+}
+
+function lerp(start, end, t){
+    return  (1 - t) * start + end * t;
 }
