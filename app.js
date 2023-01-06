@@ -41,7 +41,7 @@ function init(){
     })
 
     //prompt for name
-    // myName = prompt('enter name');
+    myName = prompt('enter name');
     if(myName === null) myName = 'default';
 
     //create new GetInput class
