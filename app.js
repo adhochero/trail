@@ -16,7 +16,7 @@ let myIndex = -1;
 
 let mouse = {x: 0, y: 0};
 let follow = {x: 0, y: 0};
-let followSpeed = 0.05;
+let followSpeed = 1;
 
 window.onload = init;
 
@@ -81,20 +81,6 @@ function update() {
     //find my index
     myIndex = entities.findIndex((entity) => entity.id === myName);
 
-    entities.forEach(entity => {
-        entity.update(secondsPassed);
-    });
-}
-
-function draw(){
-    // Clear the entire canvas
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    
-    //draw background
-    context.rect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = "#a5cbb3";
-    context.fill();
-
     if(entities.length <= 0) return
 
     //calculate center of my entity and mouse and use for "cameras" follow value
@@ -113,9 +99,24 @@ function draw(){
         y: playerCenter.y * 2 - relativeMouse.y
     }
 
-    follow.x = lerp(follow.x, betweenPlayerAndMouse.x, followSpeed);
-    follow.y = lerp(follow.y, betweenPlayerAndMouse.y, followSpeed);
+    follow.x = lerp(follow.x, betweenPlayerAndMouse.x, followSpeed * secondsPassed);
+    follow.y = lerp(follow.y, betweenPlayerAndMouse.y, followSpeed * secondsPassed);
 
+    entities.forEach(entity => {
+        entity.update(secondsPassed);
+    });
+}
+
+function draw(){
+    // Clear the entire canvas
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    
+    //draw background
+    context.rect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "#a5cbb3";
+    context.fill();
+
+    //draw things that move with translate
     context.save();
 
     context.translate(follow.x, follow.y);
