@@ -16,7 +16,11 @@ let myIndex = -1;
 
 let mouse = {x: 0, y: 0};
 let follow = {x: 0, y: 0};
-let followSpeed = 1;
+let followSpeed = 4;
+
+let relativeMouse
+let playerCenter
+let betweenPlayerAndMouse
 
 window.onload = init;
 
@@ -84,17 +88,17 @@ function update() {
     if(entities.length <= 0) return
 
     //calculate center of my entity and mouse and use for "cameras" follow value
-    const relativeMouse = {
-        x: mouse.x - entities[myIndex].position.x,
-        y: mouse.y - entities[myIndex].position.y 
-    }
-
-    const playerCenter = {
+     playerCenter = {
         x: -entities[myIndex].position.x + canvas.width / 2,
         y: -entities[myIndex].position.y + canvas.height / 2
     }
 
-    const betweenPlayerAndMouse = {
+     relativeMouse = {
+        x: mouse.x - entities[myIndex].position.x,
+        y: mouse.y - entities[myIndex].position.y 
+    }
+
+     betweenPlayerAndMouse = {
         x: playerCenter.x * 2 - relativeMouse.x,
         y: playerCenter.y * 2 - relativeMouse.y
     }
@@ -110,12 +114,15 @@ function update() {
 function draw(){
     // Clear the entire canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
-    
+    // to rest
+    context.beginPath();
+
     //draw background
     context.rect(0, 0, canvas.width, canvas.height);
     context.fillStyle = "#a5cbb3";
     context.fill();
 
+    if(entities.length <= 0) return
     //draw things that move with translate
     context.save();
 
@@ -124,7 +131,7 @@ function draw(){
     entities.forEach(entity => {
         entity.draw(context);
     });
-
+    
     context.restore();
 
     context.fillStyle = "#fff";
@@ -174,4 +181,8 @@ async function updateEntities(){
 
 function lerp(start, end, t){
     return  (1 - t) * start + end * t;
+}
+
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
 }
