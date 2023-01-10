@@ -16,7 +16,7 @@ let myIndex = -1;
 
 let mouse = {x: 0, y: 0};
 let follow = {x: 0, y: 0};
-let followSpeed = 4;
+let followSpeed = 8;
 
 window.onload = init;
 
