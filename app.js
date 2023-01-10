@@ -42,7 +42,8 @@ function init(){
 
     //prompt for name
     myName = prompt('enter name');
-    if(myName === null) myName = 'default';
+    //if no name is given generate random four digit number
+    if(myName === null || myName === '') myName = Math.floor(1000 + Math.random() * 9000).toString();
 
     //create new GetInput class
     input = new GetInput(keys);
