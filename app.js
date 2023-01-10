@@ -18,10 +18,6 @@ let mouse = {x: 0, y: 0};
 let follow = {x: 0, y: 0};
 let followSpeed = 4;
 
-let relativeMouse
-let playerCenter
-let betweenPlayerAndMouse
-
 window.onload = init;
 
 //remove me from database
@@ -88,17 +84,17 @@ function update() {
     if(entities.length <= 0) return
 
     //calculate center of my entity and mouse and use for "cameras" follow value
-     playerCenter = {
+    const playerCenter = {
         x: -entities[myIndex].position.x + canvas.width / 2,
         y: -entities[myIndex].position.y + canvas.height / 2
     }
 
-     relativeMouse = {
+    const relativeMouse = {
         x: mouse.x - entities[myIndex].position.x,
         y: mouse.y - entities[myIndex].position.y 
     }
 
-     betweenPlayerAndMouse = {
+    const betweenPlayerAndMouse = {
         x: playerCenter.x * 2 - relativeMouse.x,
         y: playerCenter.y * 2 - relativeMouse.y
     }
@@ -106,6 +102,7 @@ function update() {
     follow.x = lerp(follow.x, betweenPlayerAndMouse.x, followSpeed * secondsPassed);
     follow.y = lerp(follow.y, betweenPlayerAndMouse.y, followSpeed * secondsPassed);
 
+    //run entities update function
     entities.forEach(entity => {
         entity.update(secondsPassed);
     });
@@ -114,26 +111,30 @@ function update() {
 function draw(){
     // Clear the entire canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
-    // to rest
+    // to reset path, stopping memory leaks
     context.beginPath();
 
-    //draw background
+    //draw temp background color
     context.rect(0, 0, canvas.width, canvas.height);
     context.fillStyle = "#a5cbb3";
     context.fill();
 
-    if(entities.length <= 0) return
-    //draw things that move with translate
+    //draw things in world space
     context.save();
 
-    context.translate(follow.x, follow.y);
-
-    entities.forEach(entity => {
-        entity.draw(context);
-    });
+    if(entities.length > 0){
+        //move "camera"
+        context.translate(follow.x, follow.y);
+    
+        //run entities draw function
+        entities.forEach(entity => {
+            entity.draw(context);
+        });
+    }
     
     context.restore();
 
+    //draw fps
     context.fillStyle = "#fff";
     context.font = "14px Special Elite";
     context.textAlign = "center";
