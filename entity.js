@@ -94,7 +94,10 @@ export class Entity{
         context.fillStyle = "#fff";
         context.font = "20px Special Elite";
         context.textAlign = "center";
-        context.fillText(this.id, this.position.x, this.position.y - 32);
+        context.fillText(
+            this.id.length > 12 ? this.id.substring(0, 4).concat('...', this.id.substring(this.id.length - 3)) : this.id,
+            this.position.x,
+            this.position.y - 32);
     }
 
     lerp(start, end, t){
