@@ -20,11 +20,6 @@ let followSpeed = 8;
 
 window.onload = init;
 
-//remove me from database
-window.addEventListener('beforeunload',(e) => {
-    removeEntity(myName);
-});
-
 function init(){
     // Get a reference to the canvas
     canvas = document.getElementById('canvas');
@@ -188,3 +183,8 @@ function lerp(start, end, t){
 function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
 }
+
+//remove me from database
+window.addEventListener('beforeunload',(e) => {
+    removeEntity(myName);
+});
