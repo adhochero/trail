@@ -26,6 +26,9 @@ export class Entity{
             0.12, //sec per frame
             false
         );
+
+        this.width = 8 * 8; //for collision, frameWidth * scale
+        this.height = 8 * 8; //for collision, frameHeight * scale
     }
 
     update(secondsPassed){

@@ -1,5 +1,6 @@
 import { GetInput } from './getInput.js'
 import { Entity } from './entity.js';
+import { Environment } from './environment.js'
 import { insertEntityData, updateEntityData, removeEntity, findEntity, findAllEntities } from './database.js'
 
 let canvas;
@@ -13,6 +14,7 @@ let input;
 let keys = [];
 let entities = [];
 let myIndex = -1;
+let environment;
 
 let mouse = {x: 0, y: 0};
 let follow = {x: 0, y: 0};
@@ -39,6 +41,9 @@ function init(){
     myName = prompt('enter name');
     //if no name is given generate random four digit number
     if(myName === null || myName === '') myName = Math.floor(1000 + Math.random() * 9000).toString();
+
+    //create new Environment
+    environment = new Environment();
 
     //create new GetInput class
     input = new GetInput(keys);
@@ -102,6 +107,8 @@ function update() {
     entities.forEach(entity => {
         entity.update(secondsPassed);
     });
+
+    collideWithWalls(entities[myIndex]);
 }
 
 function draw(){
@@ -121,6 +128,9 @@ function draw(){
     if(entities.length > 0){
         //move "camera"
         context.translate(follow.x, follow.y);
+
+        //draw environment
+        environment.draw(context);
     
         //run entities draw function
         entities.forEach(entity => {
@@ -184,7 +194,63 @@ function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
 }
 
+function checkCircleCollision(cir1, cir2){
+    //assumes x and y pos is center
+    let dx = cir1.position.x - cir2.position.x;
+    let dy = cir1.position.y - cir2.position.y;
+    let radiusSum = cir1.width * 0.5 + cir2.width * 0.5;
+
+    return (dx * dx + dy * dy <= radiusSum * radiusSum)
+}
+
+function checkCircleToRectCollision(cir, rect){
+    //assumes x and y pos is center
+    let distance = {
+        x: Math.abs(cir.position.x - rect.x),
+        y: Math.abs(cir.position.y - rect.y)
+    };
+
+    if(distance.x > rect.width/2 + cir.width/2) return false;
+    if(distance.y > rect.height/2 + cir.height/2) return false;
+
+    if(distance.x <= rect.width/2) return true;
+    if(distance.y <= rect.height/2) return true;
+
+    let dx = distance.x - rect.width/2;
+    let dy = distance.y - rect.height/2;
+    return (dx * dx + dy * dy <= cir.width/2 * cir.width/2);
+}
+
 //remove me from database
 window.addEventListener('beforeunload',(e) => {
     removeEntity(myName);
 });
+
+
+function collideWithWalls(entity){
+    environment.walls.forEach(wall => {
+        //check for entity/wall collisions
+        if(checkCircleToRectCollision(entity, wall)){
+            if (entity.position.x + entity.moveDirection.x > (wall.x - wall.width/2) - entity.width/2 &&
+                entity.position.x < (wall.x - wall.width/2)){
+                // entity.velocity.x = -entity.moveDirection.x * 1.25;
+                entity.position.x = wall.x - wall.width/2 - entity.width/2;
+            }
+            else if (entity.position.x + entity.moveDirection.x < (wall.x + wall.width/2) + entity.width/2 &&
+                entity.position.x > (wall.x + wall.width/2)){
+                // entity.velocity.x = -entity.moveDirection.x * 1.25;
+                entity.position.x = wall.x + wall.width/2 + entity.width/2;
+            }
+            else if (entity.position.y + entity.moveDirection.y > (wall.y - wall.height/2) - entity.height/2 &&
+                entity.position.y < (wall.y - wall.height/2)){
+                // entity.velocity.y = -entity.moveDirection.y * 1.25;
+                entity.position.y = wall.y - wall.height/2 - entity.height/2;
+            }
+            else if (entity.position.y + entity.moveDirection.y < (wall.y + wall.height/2) + entity.height/2 &&
+                entity.position.y > (wall.y + wall.height/2)){
+                // entity.velocity.y = -entity.moveDirection.y * 1.25;
+                entity.position.y = wall.y + wall.height/2 + entity.height/2;
+            }
+        }
+    });
+}
