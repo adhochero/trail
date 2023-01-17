@@ -3,6 +3,8 @@ import { Entity } from './entity.js';
 import { Environment } from './environment.js'
 import { insertEntityData, updateEntityData, removeEntity, findEntity, findAllEntities } from './database.js'
 
+import {Gun} from './gun.js'
+
 let canvas;
 let context;
 let secondsPassed = 0;
@@ -19,6 +21,8 @@ let environment;
 let mouse = {x: 0, y: 0};
 let follow = {x: 0, y: 0};
 let followSpeed = 8;
+
+let gun;
 
 window.onload = init;
 
@@ -44,6 +48,9 @@ function init(){
 
     //create new Environment
     environment = new Environment();
+
+    //create new Gun
+    gun = new Gun();
 
     //create new GetInput class
     input = new GetInput(keys);

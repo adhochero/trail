@@ -43,7 +43,7 @@ function updateEntityData(id, x, y, md){
         mdy: md.y
     })
     .then(() => {
-        console.log("Data updated successfully!!");
+        // console.log("Data updated successfully!!");
     })
     .catch((error) => {
         console.log(error);
